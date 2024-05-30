@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 
-const AuthContext = React.createContext<{
+interface AuthContextProps {
   isLoggedIn: boolean;
   isLoadingAuth: boolean;
-  login: VoidFunction;
+  authenticate: (email: string, password: string) => Promise<void>;
   logout: VoidFunction;
   setIsLoadingAuth: React.Dispatch<React.SetStateAction<boolean>>;
-}>({
-  isLoggedIn: false,
-  isLoadingAuth: true,
-  login: () => { },
-  logout: () => { },
-  setIsLoadingAuth: () => { },
-});
+}
+
+const AuthContext = React.createContext({} as AuthContextProps);
 
 export function useAuth() {
   return React.useContext(AuthContext);
@@ -20,9 +16,9 @@ export function useAuth() {
 
 export function AuthenticationProvider({ children }: React.PropsWithChildren) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(false);
 
-  function login() {
+  async function authenticate(email: string, password: string) {
     setIsLoggedIn(true);
   }
 
@@ -33,7 +29,7 @@ export function AuthenticationProvider({ children }: React.PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={ {
-        login,
+        authenticate,
         logout,
         isLoggedIn,
         isLoadingAuth,
