@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import { userService } from '@/services/user';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
+import { router } from 'expo-router';
 
 interface AuthContextProps {
   isLoggedIn: boolean;
   isLoadingAuth: boolean;
-  authenticate: (email: string, password: string) => Promise<void>;
+  authenticate: (authMode: "login" | "register", email: string, password: string) => Promise<void>;
   logout: VoidFunction;
-  setIsLoadingAuth: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = React.createContext({} as AuthContextProps);
@@ -18,12 +20,37 @@ export function AuthenticationProvider({ children }: React.PropsWithChildren) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(false);
 
-  async function authenticate(email: string, password: string) {
-    setIsLoggedIn(true);
+  useEffect(() => {
+    async function checkIfLoggedIn() {
+      const token = await AsyncStorage.getItem('token');
+      setIsLoggedIn(!!token);
+      router.replace('(authed)');
+    }
+
+    checkIfLoggedIn();
+  }, []);
+
+  async function authenticate(authMode: "login" | "register", email: string, password: string) {
+    try {
+      setIsLoadingAuth(true);
+
+      const response = await userService[authMode](email, password);
+
+      if (response) {
+        setIsLoggedIn(true);
+        await AsyncStorage.setItem('token', response.data.token);
+        router.replace('(authed)');
+      }
+    } catch (error) {
+      setIsLoggedIn(false);
+    } finally {
+      setIsLoadingAuth(false);
+    }
   }
 
-  function logout() {
+  async function logout() {
     setIsLoggedIn(false);
+    await AsyncStorage.removeItem('token');
   }
 
   return (
@@ -33,7 +60,6 @@ export function AuthenticationProvider({ children }: React.PropsWithChildren) {
         logout,
         isLoggedIn,
         isLoadingAuth,
-        setIsLoadingAuth,
       } }>
       { children }
     </AuthContext.Provider>

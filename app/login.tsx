@@ -11,16 +11,16 @@ import { useAuth } from '@/context/AuthContext';
 export default function Login() {
   const { authenticate, isLoadingAuth } = useAuth();
 
-  const [authMode, setAuthMode] = useState<"Login" | "Register">('Login');
+  const [authMode, setAuthMode] = useState<"login" | "register">('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  function onAuthenticate() {
-    authenticate(email, password);
+  async function onAuthenticate() {
+    await authenticate(authMode, email, password);
   }
 
   function onToggleAuthMode() {
-    setAuthMode(authMode === 'Login' ? 'Register' : 'Login');
+    setAuthMode(authMode === 'login' ? 'register' : 'login');
   }
 
   return (
@@ -65,7 +65,7 @@ export default function Login() {
       <Divider w={ "90%" } />
 
       <Text onPress={ onToggleAuthMode } fontSize={ 16 } underline>
-        { authMode === 'Login' ? 'Register new account' : 'Login to account' }
+        { authMode === 'login' ? 'Register new account' : 'Login to account' }
       </Text>
     </VStack>
   );
