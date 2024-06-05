@@ -16,7 +16,7 @@ interface ContainerProps {
   | "space-evenly";
 }
 
-export interface StackProps extends PropsWithChildren, ShortcutProps, ContainerProps { }
+export interface StackProps extends PropsWithChildren, ShortcutProps, ContainerProps, ViewProps { }
 
 export function Stack({
   flex,
@@ -25,6 +25,7 @@ export function Stack({
   alignItems,
   justifyContent,
   children,
+  style,
   ...restProps
 }: StackProps) {
   return (
@@ -34,7 +35,7 @@ export function Stack({
       gap,
       alignItems,
       justifyContent,
-    }] } { ...restProps }
+    }, style] } { ...restProps }
     >
       { children }
     </View>
