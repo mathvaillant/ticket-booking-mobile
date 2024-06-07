@@ -1,11 +1,14 @@
 import { Slot } from 'expo-router';
 import { AuthenticationProvider } from '../context/AuthContext';
-import { SafeAreaView } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Root() {
   return (
-    <AuthenticationProvider>
-      <Slot />
-    </AuthenticationProvider>
+    <>
+      <StatusBar style="dark" />
+      <AuthenticationProvider>
+        <Slot />
+      </AuthenticationProvider>
+    </>
   );
 }

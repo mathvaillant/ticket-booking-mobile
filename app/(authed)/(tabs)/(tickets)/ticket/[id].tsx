@@ -54,8 +54,8 @@ export default function TicketDetailsScreen() {
 
       <Image
         style={ { borderRadius: 20 } }
-        width={ 380 }
-        height={ 380 }
+        width={ 300 }
+        height={ 300 }
         source={ { uri: `data:image/png;base64,${qrcode}` } }
       />
     </VStack>
