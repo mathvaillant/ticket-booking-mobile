@@ -7,7 +7,9 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { useAuth } from '@/context/AuthContext';
 import { useOnScreenFocusCallback } from '@/hooks/useOnScreenFocusCallback';
 import { eventService } from '@/services/events';
+import { ticketService } from '@/services/tickets';
 import { Event } from '@/types/event';
+import { UserRole } from '@/types/user';
 import { useNavigation, router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, FlatList, TouchableOpacity } from 'react-native';
@@ -20,8 +22,18 @@ export default function EventsScreen() {
   const [events, setEvents] = useState<Event[]>([]);
 
   function onGoToEventPage(id: number) {
-    if (user?.role === "manager") {
+    if (user?.role === UserRole.Manager) {
       router.push(`/(events)/event/${id}`);
+    }
+  }
+
+  async function buyTicket(id: number) {
+    try {
+      await ticketService.createOne(id);
+      Alert.alert("Success", "Ticket purchased successfully");
+      fetchEvents();
+    } catch (error) {
+      Alert.alert("Error", "Failed to buy ticket");
     }
   }
 
@@ -42,7 +54,7 @@ export default function EventsScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerTitle: "Events",
-      headerRight: user?.role === "manager" ? headerRight : null,
+      headerRight: user?.role === UserRole.Manager ? headerRight : null,
     });
   }, [navigation, user]);
 
@@ -74,22 +86,31 @@ export default function EventsScreen() {
                   <Text fontSize={ 26 } bold > | </Text>
                   <Text fontSize={ 16 } bold >{ event.location }</Text>
                 </HStack>
-                { user?.role === "manager" && <TabBarIcon size={ 24 } name="chevron-forward" /> }
+                { user?.role === UserRole.Manager && <TabBarIcon size={ 24 } name="chevron-forward" /> }
               </HStack>
             </TouchableOpacity>
 
             <Divider />
 
             <HStack justifyContent='space-between'>
+
               <VStack gap={ 10 }>
                 <Text bold fontSize={ 16 } color='gray'>Sold: { event.totalTicketsPurchased }</Text>
                 <Text bold fontSize={ 16 } color='green'>Entered: { event.totalTicketsEntered }</Text>
               </VStack>
-              { user?.role === "attendee" && (
+
+              { user?.role === UserRole.Attendee && (
                 <VStack>
-                  <Button variant='outlined'>Buy Ticket</Button>
+                  <Button
+                    variant='outlined'
+                    disabled={ isLoading }
+                    onPress={ () => buyTicket(event.id) }
+                  >
+                    Buy Ticket
+                  </Button>
                 </VStack>
               ) }
+
             </HStack>
             <Text fontSize={ 13 } color='gray'>{ event.date }</Text>
           </VStack>
