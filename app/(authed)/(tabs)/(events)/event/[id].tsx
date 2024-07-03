@@ -1,4 +1,5 @@
 import { Button } from '@/components/Button';
+import DateTimePicker from '@/components/DateTimePicker';
 import { Input } from '@/components/Input';
 import { Text } from '@/components/Text';
 import { VStack } from '@/components/VStack';
@@ -6,7 +7,6 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { useOnScreenFocusCallback } from '@/hooks/useOnScreenFocusCallback';
 import { eventService } from '@/services/events';
 import { Event } from '@/types/event';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useLocalSearchParams, useNavigation, router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
@@ -106,15 +106,9 @@ export default function EventDetailsScreen() {
 
       <VStack gap={ 5 }>
         <Text ml={ 10 } fontSize={ 14 } color="gray">Date</Text>
-        <DateTimePicker
-          style={ {
-            alignSelf: "flex-start",
-          } }
-          accentColor='black'
-          minimumDate={ new Date() }
-          value={ new Date(eventData?.date ?? new Date()) }
-          mode={ "datetime" }
-          onChange={ (_, date) => date && updateField("date", date) }
+        <DateTimePicker 
+          onChange={(date) => updateField('date', date || new Date())} 
+          currentDate={new Date(eventData?.date || new Date())} 
         />
       </VStack>
 
