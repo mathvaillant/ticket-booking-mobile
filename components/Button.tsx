@@ -16,18 +16,18 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <TouchableOpacity
-      disabled={ isLoading }
-      onPress={ onPress }
-      style={ [
+      disabled={isLoading}
+      onPress={onPress}
+      style={[
         defaultShortcuts(restProps),
-        styles[variant].defaults,
-        isLoading && disabled.defaults
-      ] }
-      { ...restProps }
+        styles[variant].button,
+        isLoading && disabled.button
+      ]}
+      {...restProps}
     >
-      { isLoading ?
-        <ActivityIndicator animating={ isLoading } size={ 22 } /> :
-        <Text style={ styles[variant].text }>{ children }</Text>
+      {isLoading ?
+        <ActivityIndicator animating={isLoading} size={22} /> :
+        <Text style={styles[variant].text}>{children}</Text>
       }
     </TouchableOpacity>
   );
@@ -35,7 +35,7 @@ export const Button = ({
 
 const styles = {
   contained: StyleSheet.create({
-    defaults: {
+    button: {
       padding: 14,
       borderRadius: 50,
       backgroundColor: 'black',
@@ -47,7 +47,7 @@ const styles = {
     },
   }),
   outlined: StyleSheet.create({
-    defaults: {
+    button: {
       padding: 14,
       borderRadius: 50,
       borderColor: 'darkgray',
@@ -60,7 +60,7 @@ const styles = {
     },
   }),
   ghost: StyleSheet.create({
-    defaults: {
+    button: {
       padding: 14,
       borderRadius: 50,
       backgroundColor: 'transparent',
@@ -74,7 +74,7 @@ const styles = {
 };
 
 const disabled = StyleSheet.create({
-  defaults: {
+  button: {
     opacity: 0.5,
   },
 });

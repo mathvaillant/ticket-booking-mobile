@@ -1,23 +1,18 @@
-import React from 'react';
-import { TextInput as RNTextInput, StyleSheet, TextInputProps } from 'react-native';
 import { ShortcutProps, defaultShortcuts } from "@/styles/shortcuts";
+import { TextInput, TextInputProps } from "react-native";
 
-export interface InputProps extends ShortcutProps, TextInputProps { }
+interface InputProps extends ShortcutProps, TextInputProps { }
 
-export const Input = (props: InputProps) => {
+export function Input(props: InputProps) {
   return (
-    <RNTextInput
-      style={ [defaultShortcuts(props), styles.defaults] }
-      { ...props }
+    <TextInput
+      style={[defaultShortcuts(props), {
+        fontSize: 16,
+        borderRadius: 16,
+        backgroundColor: "lightgray",
+        color: "black"
+      }]}
+      {...props}
     />
   );
-};
-
-const styles = StyleSheet.create({
-  defaults: {
-    fontSize: 16,
-    borderRadius: 16,
-    backgroundColor: 'lightgray',
-    color: "black",
-  }
-});
+}

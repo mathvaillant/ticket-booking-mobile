@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from "react";
 import { View, ViewProps } from "react-native";
 import { ShortcutProps, defaultShortcuts } from "@/styles/shortcuts";
 
-interface ContainerProps {
+export interface StackProps extends PropsWithChildren, ShortcutProps, ViewProps {
   flex?: number;
   direction?: "row" | "column";
   gap?: number;
@@ -16,8 +16,6 @@ interface ContainerProps {
   | "space-evenly";
 }
 
-export interface StackProps extends PropsWithChildren, ShortcutProps, ContainerProps, ViewProps { }
-
 export function Stack({
   flex,
   direction,
@@ -29,15 +27,15 @@ export function Stack({
   ...restProps
 }: StackProps) {
   return (
-    <View style={ [defaultShortcuts(restProps), {
+    <View style={[defaultShortcuts(restProps), {
       flex,
       flexDirection: direction,
       gap,
       alignItems,
       justifyContent,
-    }, style] } { ...restProps }
+    }, style]} {...restProps}
     >
-      { children }
+      {children}
     </View>
   );
 }
