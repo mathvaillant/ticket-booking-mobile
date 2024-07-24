@@ -4,9 +4,9 @@ import { Input } from '@/components/Input';
 import { Text } from '@/components/Text';
 import { VStack } from '@/components/VStack';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { useOnScreenFocusCallback } from '@/hooks/useOnScreenFocusCallback';
 import { eventService } from '@/services/events';
 import { Event } from '@/types/event';
+import { useFocusEffect } from '@react-navigation/native';
 import { useLocalSearchParams, useNavigation, router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
@@ -68,7 +68,7 @@ export default function EventDetailsScreen() {
     }
   }, [id, router]);
 
-  useOnScreenFocusCallback(fetchEvent);
+  useFocusEffect(useCallback(() => { fetchEvent(); }, []));
 
   useEffect(() => {
     navigation.setOptions({
@@ -78,45 +78,45 @@ export default function EventDetailsScreen() {
   }, [navigation, onDelete]);
 
   return (
-    <VStack m={ 20 } flex={ 1 } gap={ 30 }>
+    <VStack m={20} flex={1} gap={30}>
 
-      <VStack gap={ 5 }>
-        <Text ml={ 10 } fontSize={ 14 } color="gray">Name</Text>
+      <VStack gap={5}>
+        <Text ml={10} fontSize={14} color="gray">Name</Text>
         <Input
-          value={ eventData?.name }
-          onChangeText={ (value) => updateField("name", value) }
+          value={eventData?.name}
+          onChangeText={(value) => updateField("name", value)}
           placeholder="Name"
           placeholderTextColor="darkgray"
-          h={ 48 }
-          p={ 14 }
+          h={48}
+          p={14}
         />
       </VStack>
 
-      <VStack gap={ 5 }>
-        <Text ml={ 10 } fontSize={ 14 } color="gray">Location</Text>
+      <VStack gap={5}>
+        <Text ml={10} fontSize={14} color="gray">Location</Text>
         <Input
-          value={ eventData?.location }
-          onChangeText={ (value) => updateField("location", value) }
+          value={eventData?.location}
+          onChangeText={(value) => updateField("location", value)}
           placeholder="Name"
           placeholderTextColor="darkgray"
-          h={ 48 }
-          p={ 14 }
+          h={48}
+          p={14}
         />
       </VStack>
 
-      <VStack gap={ 5 }>
-        <Text ml={ 10 } fontSize={ 14 } color="gray">Date</Text>
-        <DateTimePicker 
-          onChange={(date) => updateField('date', date || new Date())} 
-          currentDate={new Date(eventData?.date || new Date())} 
+      <VStack gap={5}>
+        <Text ml={10} fontSize={14} color="gray">Date</Text>
+        <DateTimePicker
+          onChange={(date) => updateField('date', date || new Date())}
+          currentDate={new Date(eventData?.date || new Date())}
         />
       </VStack>
 
       <Button
-        mt={ "auto" }
-        isLoading={ isSubmitting }
-        disabled={ isSubmitting }
-        onPress={ onSubmitChanges }
+        mt={"auto"}
+        isLoading={isSubmitting}
+        disabled={isSubmitting}
+        onPress={onSubmitChanges}
       >
         Save Changes
       </Button>
@@ -127,6 +127,6 @@ export default function EventDetailsScreen() {
 
 const headerRight = (onPress: VoidFunction) => {
   return (
-    <TabBarIcon size={ 30 } name="trash" onPress={ onPress } />
+    <TabBarIcon size={30} name="trash" onPress={onPress} />
   );
 };
