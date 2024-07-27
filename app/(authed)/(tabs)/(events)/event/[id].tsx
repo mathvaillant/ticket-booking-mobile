@@ -59,14 +59,14 @@ export default function EventDetailsScreen() {
     }
   }
 
-  const fetchEvent = useCallback(async () => {
+  const fetchEvent = async () => {
     try {
       const response = await eventService.getOne(Number(id));
       setEventData(response.data);
     } catch (error) {
       router.back();
     }
-  }, [id, router]);
+  };
 
   useFocusEffect(useCallback(() => { fetchEvent(); }, []));
 

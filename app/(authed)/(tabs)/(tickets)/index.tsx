@@ -1,9 +1,9 @@
 import { HStack } from '@/components/HStack';
 import { Text } from '@/components/Text';
 import { VStack } from '@/components/VStack';
-import { useOnScreenFocusCallback } from '@/hooks/useOnScreenListener';
 import { ticketService } from '@/services/tickets';
 import { Ticket } from '@/types/ticket';
+import { useFocusEffect } from '@react-navigation/native';
 import { router, useNavigation } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, FlatList, TouchableOpacity } from 'react-native';
@@ -18,7 +18,7 @@ export default function TicketsScreen() {
     router.push(`/(tickets)/ticket/${id}`);
   }
 
-  const fetchTickets = useCallback(async () => {
+  const fetchTickets = async () => {
     try {
       setIsLoading(true);
       const response = await ticketService.getAll();
@@ -28,9 +28,9 @@ export default function TicketsScreen() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
-  useOnScreenFocusCallback(fetchTickets);
+  useFocusEffect(useCallback(() => { fetchTickets(); }, []));
 
   useEffect(() => {
     navigation.setOptions({ headerTitle: "Tickets" });

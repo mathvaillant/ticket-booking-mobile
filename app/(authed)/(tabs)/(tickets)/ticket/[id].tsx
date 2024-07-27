@@ -1,9 +1,8 @@
 import { VStack } from '@/components/VStack';
 import { Text } from '@/components/Text';
-import { useOnScreenFocusCallback } from '@/hooks/useOnScreenListener';
 import { ticketService } from '@/services/tickets';
 import { Ticket } from '@/types/ticket';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Image } from 'react-native';
 
@@ -14,7 +13,7 @@ export default function TicketDetailsScreen() {
   const [ticketData, setTicketData] = useState<Ticket | null>(null);
   const [qrcode, setQrcode] = useState<string | null>(null);
 
-  const fetchTicket = useCallback(async () => {
+  const fetchTicket = async () => {
     try {
       const response = await ticketService.getOne(Number(id));
       setTicketData(response.data.ticket);
@@ -22,13 +21,9 @@ export default function TicketDetailsScreen() {
     } catch (error) {
       router.back();
     }
-  }, [id, router]);
+  };
 
-  useOnScreenFocusCallback(fetchTicket);
-
-  useEffect(() => {
-    fetchTicket();
-  }, [fetchTicket]);
+  useFocusEffect(useCallback(() => { fetchTicket(); }, []));
 
   useEffect(() => {
     navigation.setOptions({ headerTitle: "" });
