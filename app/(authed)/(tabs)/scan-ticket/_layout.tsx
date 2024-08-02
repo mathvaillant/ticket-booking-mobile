@@ -11,21 +11,21 @@ export default function ScanTicketScreen() {
   const [scanningEnabled, setScanningEnabled] = useState(true);
 
   if (!permission) {
-    return <VStack flex={ 1 } justifyContent='center' alignItems='center'>
-      <ActivityIndicator size={ "large" } />
+    return <VStack flex={1} justifyContent='center' alignItems='center'>
+      <ActivityIndicator size={"large"} />
     </VStack>;
   }
 
   if (!permission.granted) {
     return (
-      <VStack gap={ 20 } flex={ 1 } justifyContent='center' alignItems='center'>
+      <VStack gap={20} flex={1} justifyContent='center' alignItems='center'>
         <Text>Camera access is required to scan tickets.</Text>
-        <Button onPress={ requestPermission }>Allow Camera Access</Button>
+        <Button onPress={requestPermission}>Allow Camera Access</Button>
       </VStack>
     );
   }
 
-  async function onCodeScanned({ data }: BarcodeScanningResult) {
+  async function onBarcodeScanned({ data }: BarcodeScanningResult) {
     if (!scanningEnabled) return;
 
     try {
@@ -50,12 +50,12 @@ export default function ScanTicketScreen() {
 
   return (
     <CameraView
-      style={ { flex: 1 } }
+      style={{ flex: 1 }}
       facing="back"
-      onBarcodeScanned={ onCodeScanned }
-      barcodeScannerSettings={ {
+      onBarcodeScanned={onBarcodeScanned}
+      barcodeScannerSettings={{
         barcodeTypes: ["qr"],
-      } }
+      }}
     />
   );
 }
